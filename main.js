@@ -9,6 +9,8 @@ class Graph {
     */
     #adjMatrix
     #adjList 
+    
+    #size = 0
 
     /*
      * @constructor
@@ -18,9 +20,10 @@ class Graph {
     constructor(arg) {
         if (Array.isArray(arg)) {
             this.#adjMatrix = arg;
+            this.#size = this.#adjMatrix.length; 
             this.#adjList = new Object();
              
-            for (var i = 0; i < this.#adjMatrix.length; i++) {
+            for (var i = 0; i < this.#size; i++) {
                 var tmpVer = new Array();
                 this.#adjMatrix[i].forEach(function(element, index) {
                     if (element !== 0) { tmpVer.push(index); }
@@ -28,16 +31,31 @@ class Graph {
                 this.#adjList[i] = tmpVer;
                 tmpVer = [];
             }
-            console.log(this.#adjList);
         } else if (typeof arg === "object") {
             this.#adjList = arg;
-            this.#adjMatrix = new Array(Object.keys(this.#adjList).length).fill().map(() =>
-                new Array(Object.keys(this.#adjList).length.fill(0))); 
-
+            this.#size = Object.keys(this.#adjList).length;
+            this.#adjMatrix = new Array();
+	        for (var i = 0; i < this.#size; i++) {
+	            this.#adjMatrix[i] = [];
+	            for (var j = 0; j < this.#size; j++) {
+	                this.#adjMatrix[i][j] = 0;
+	            }
+            }
+            for (const [key, val] of Object.entries(this.#adjList)) {
+                for (const ver of val) {
+                    this.#adjMatrix[key][ver] = 1;
+                }
+            }
         } else {
             throw "lolxd"; 
         }
     }
+    
+    /** @return void */
+    show() { console.log(this.#adjList); }
+    
+    /** @return void */
+    showMatrix() { console.log(this.#adjMatrix); }
 }
 
 /** @return {void} */
@@ -64,5 +82,7 @@ function main() {
         [1, 1, 0]
     ];
     
-    var g = new Graph(mat_g_1);
+    var g = new Graph(list_g_1);
+    g.show();
+    g.showMatrix();
 } main();
