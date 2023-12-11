@@ -1,9 +1,9 @@
 class Graph<T> {
-    private adjMatrix: Array<Array<T>>;
+    private adjMatrix: T[][];
     private adjList: Object;
     private size: number;
 
-    public constructor(arg: Array<Array<T>> | Object){
+    public constructor(arg: T[][] | Object){
         if (Array.isArray(arg)) {
             this.adjMatrix = arg;
             this.size = this.adjMatrix.length; 
@@ -17,7 +17,7 @@ class Graph<T> {
         }
     }
 
-    private toList(arg: Array<Array<T>>) {
+    private toList(arg: T[][]) {
         let list = new Object();
 
         for (let i: number = 0; i < arg.length; i++) {
@@ -50,21 +50,22 @@ class Graph<T> {
     public showMatrix() { console.log(this.adjMatrix); }
 }
 
-class PriorityQueue {
-    private heap: Array<{node: number, priority: number}>;
 
-    public constructor() {
+class PriorityQueue {
+    private heap: { node: number, priority: number }[];
+
+    constructor() {
         this.heap = [];
     }
 
     public enqueue(node: number, priority: number): void {
-        this.heap.push({node, priority});
+        this.heap.push({ node, priority });
         this.bubbleUp();
     }
 
-    public dequeue(): {node: number, priority: number} {
-        const min: {node: number, priority: number} = this.heap[0];
-        const end: {node: number, priority: number} = this.heap.pop()!;
+    public dequeue(): { node: number, priority: number } {
+        const min = this.heap[0];
+        const end = this.heap.pop();
         if (this.heap.length > 0) {
             this.heap[0] = end!;
             this.sinkDown();
@@ -72,13 +73,13 @@ class PriorityQueue {
         return min;
     }
 
-    public bubbleUp(): void {
-        let index: number = this.heap.length - 1;
-        const element: {node: number, priority: number} = this.heap[index];
+    private bubbleUp(): void {
+        let index = this.heap.length - 1;
+        const element = this.heap[index];
 
         while (index > 0) {
-            const parentIndex: number = Math.floor((index - 1) / 2);
-            const parent: {node: number, priority: number} = this.heap[parentIndex];
+            const parentIndex = Math.floor((index - 1) / 2);
+            const parent = this.heap[parentIndex];
 
             if (element.priority >= parent.priority) break;
 
@@ -88,17 +89,16 @@ class PriorityQueue {
         }
     }
 
-    public sinkDown(): void {
-        let index: number = 0;
-        const length: number = this.heap.length;
-        const element: {node: number, priority: number} = this.heap[0];
+    private sinkDown(): void {
+        let index = 0;
+        const length = this.heap.length;
+        const element = this.heap[0];
 
         while (true) {
-            let leftChildIndex: number = 2 * index + 1;
-            let rightChildIndex: number = 2 * index + 2;
-            let leftChild: {node: number, priority: number};
-            let rightChild: {node: number, priority: number};
-            let swap: number = 0;
+            let leftChildIndex = 2 * index + 1;
+            let rightChildIndex = 2 * index + 2;
+            let leftChild, rightChild;
+            let swap = null;
 
             if (leftChildIndex < length) {
                 leftChild = this.heap[leftChildIndex];
@@ -111,7 +111,7 @@ class PriorityQueue {
                 rightChild = this.heap[rightChildIndex];
                 if (
                     (swap === null && rightChild.priority < element.priority) ||
-                    (swap !== null && rightChild.priority < leftChild!.priority)
+                    (swap !== null && rightChild.priority < leftChild.priority)
                 ) {
                     swap = rightChildIndex;
                 }
@@ -125,7 +125,7 @@ class PriorityQueue {
         }
     }
 
-    public isEmpty(): Boolean {
+    public isEmpty(): boolean {
         return this.heap.length === 0;
     }
 }

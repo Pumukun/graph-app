@@ -79,9 +79,8 @@ class PriorityQueue {
         while (true) {
             let leftChildIndex = 2 * index + 1;
             let rightChildIndex = 2 * index + 2;
-            let leftChild;
-            let rightChild;
-            let swap = 0;
+            let leftChild, rightChild;
+            let swap = null;
             if (leftChildIndex < length) {
                 leftChild = this.heap[leftChildIndex];
                 if (leftChild.priority < element.priority) {
