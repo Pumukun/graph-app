@@ -3,7 +3,7 @@ class Graph<T> {
     private adjList: Object;
     private size: number;
 
-    public constructor(arg: T[][] | Object){
+    public constructor(arg: T[][] | Object) { 
         if (Array.isArray(arg)) {
             this.adjMatrix = arg;
             this.size = this.adjMatrix.length; 
@@ -17,7 +17,7 @@ class Graph<T> {
         }
     }
 
-    private toList(arg: T[][]) {
+    private toList(arg: T[][]): Object {
         let list = new Object();
 
         for (let i: number = 0; i < arg.length; i++) {
@@ -31,7 +31,7 @@ class Graph<T> {
         return list;
     }
 
-    private toMatrix(arg: Object) {
+    private toMatrix(arg: Object): T[][] {
         let matrix = new Array(Object.keys(arg).length).fill(0).map(() => new Array(Object.keys(arg).length).fill(0));
         for (const [key, val] of Object.entries(arg)) {
             for (const [ver, cost] of Object.entries(val)) {
@@ -52,18 +52,18 @@ class Graph<T> {
 
 
 class PriorityQueue {
-    private heap: { node: number, priority: number }[];
+    private heap: { node: any, priority: number }[];
 
     constructor() {
         this.heap = [];
     }
 
-    public enqueue(node: number, priority: number): void {
+    public enqueue(node: any, priority: number): void {
         this.heap.push({ node, priority });
         this.bubbleUp();
     }
 
-    public dequeue(): { node: number, priority: number } {
+    public dequeue(): { node: any, priority: number } {
         const min = this.heap[0];
         const end = this.heap.pop();
         if (this.heap.length > 0) {
@@ -130,7 +130,7 @@ class PriorityQueue {
     }
 }
 
-function findMinDistance(distances: Array<number>, visited: Array<Boolean>): number {
+function findMinDistance(distances: any[], visited: boolean[]): number {
     let minDistance: number = Infinity;
     let minIndex: number = -1;
 
@@ -144,32 +144,66 @@ function findMinDistance(distances: Array<number>, visited: Array<Boolean>): num
     return minIndex;
 }
 
-function dijkstra(pgraph: Graph<any>, start: number): Array<any> {
-    let graph: Array<Array<any>> = pgraph.getMatrix();
-    const n: number = graph.length;
-  
-    const distances = new Array(n).fill(Infinity);
-    const visited = new Array(n).fill(false);
+interface ShortestPaths {
+  [key: string]: { [key: string]: number };
+}
 
-    distances[start] = 0;
- 
-    const pq = new PriorityQueue();
-    pq.enqueue(start, 0);
+function dijkstra(pgraph: Graph<any>, v1: string, v2?: string) {
+    let graph: { [keu: string]: any } = pgraph.getList();
+    const distances: { [key: string]: number } = {};
+    const visited: { [key: string]: boolean } = {};
+    const previous: { [key: string]: string | null } = {};
 
-    while (!pq.isEmpty()) {
-        const { node } = pq.dequeue();
+    for (const vertex in graph) {
+        distances[vertex] = Infinity;
+        visited[vertex] = false;
+        previous[vertex] = null;
+    }
 
-        visited[node] = true;
+    distances[v1] = 0;
 
-        for (let i: number = 0; i < n; i++) {
-            if (graph[node][i] > 0 && visited[i] === false) {
-                const distance: number = distances[node] + graph[node][i];
-                if (distance < distances[i]) {
-                    distances[i] = distance;
-                    pq.enqueue(i, distance);
-                }
+    while (true) {
+        let minDistance = Infinity;
+        let minVertex = null;
+
+        for (const vertex in graph) {
+            if (!visited[vertex] && distances[vertex] < minDistance) {
+                minDistance = distances[vertex];
+                minVertex = vertex;
             }
         }
+
+        if (minVertex === null) {
+            break;
+        }
+
+        visited[minVertex] = true;
+
+        for (const neighbor in graph[minVertex]) {
+            const distance = graph[minVertex][neighbor];
+
+            if (distances[minVertex] + distance < distances[neighbor]) {
+                distances[neighbor] = distances[minVertex] + distance;
+                previous[neighbor] = minVertex;
+            }
+        }
+    }
+
+    if (v2) {
+        if (distances[v2] === Infinity) {
+            return -1; // Вершина v2 недостижима из v1
+        }
+
+        const path: { [key: string]: number } = {};
+        let currentVertex = v2;
+
+        while (currentVertex !== v1) {
+            const previousVertex = previous[currentVertex];
+            path[currentVertex] = graph[previousVertex][currentVertex];
+            currentVertex = previousVertex!;
+        }
+
+        return { [v2]: path };
     }
 
     return distances;
@@ -203,10 +237,23 @@ var mat_g_2 = [
     [1, 1, 0]
 ];
 
+var lol_graph = [
+    [0, 8, 2, 0, 5, 1, 7, 3, 5, 9, 3, 7],
+    [8, 0, 7, 5, 7, 1, 9, 1, 1, 6, 6, 9],
+    [2, 7, 0, 9, 3, 5, 1, 9, 1, 0, 8, 0],
+    [0, 5, 9, 0, 8, 8, 4, 0, 3, 5, 7, 8],
+    [5, 7, 3, 8, 0, 1, 7, 3, 0, 6, 8, 9],
+    [1, 1, 5, 8, 1, 0, 7, 0, 0, 8, 6, 9],
+    [7, 9, 1, 4, 7, 7, 0, 0, 7, 2, 5, 8],
+    [3, 1, 9, 0, 3, 0, 0, 0, 1, 8, 8, 1],
+    [5, 1, 1, 3, 0, 0, 7, 1, 0, 8, 6, 9],
+    [9, 6, 0, 5, 6, 8, 2, 8, 8, 0, 2, 7],
+    [3, 6, 8, 7, 8, 6, 5, 8, 6, 2, 0, 4],
+    [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
+]
+
 function main() {
-    var g = new Graph<number>(list_g_1);
-    g.show();
-    g.showMatrix();
-    console.log(dijkstra(g, 0));
+    var g = new Graph<number>(lol_graph);
+    console.log(dijkstra(g, '3', '11'));
 } main();
 

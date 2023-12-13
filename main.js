@@ -116,7 +116,7 @@ function findMinDistance(distances, visited) {
     }
     return minIndex;
 }
-function dijkstra(pgraph, start) {
+function dijkstra1(pgraph, start) {
     let graph = pgraph.getMatrix();
     const n = graph.length;
     const distances = new Array(n).fill(Infinity);
@@ -136,6 +136,53 @@ function dijkstra(pgraph, start) {
                 }
             }
         }
+    }
+    return distances;
+}
+function dijkstra(pgraph, v1, v2) {
+    let graph = pgraph.getList();
+    const distances = {};
+    const visited = {};
+    const previous = {};
+    for (const vertex in graph) {
+        distances[vertex] = Infinity;
+        visited[vertex] = false;
+        previous[vertex] = null;
+    }
+    distances[v1] = 0;
+    while (true) {
+        let minDistance = Infinity;
+        let minVertex = null;
+        for (const vertex in graph) {
+            if (!visited[vertex] && distances[vertex] < minDistance) {
+                minDistance = distances[vertex];
+                minVertex = vertex;
+            }
+        }
+        if (minVertex === null) {
+            break;
+        }
+        visited[minVertex] = true;
+        for (const neighbor in graph[minVertex]) {
+            const distance = graph[minVertex][neighbor];
+            if (distances[minVertex] + distance < distances[neighbor]) {
+                distances[neighbor] = distances[minVertex] + distance;
+                previous[neighbor] = minVertex;
+            }
+        }
+    }
+    if (v2) {
+        if (distances[v2] === Infinity) {
+            return -1; // Вершина v2 недостижима из v1
+        }
+        const path = {};
+        let currentVertex = v2;
+        while (currentVertex !== v1) {
+            const previousVertex = previous[currentVertex];
+            path[currentVertex] = graph[previousVertex][currentVertex];
+            currentVertex = previousVertex;
+        }
+        return { [v2]: path };
     }
     return distances;
 }
@@ -163,10 +210,22 @@ var mat_g_2 = [
     [1, 0, 1],
     [1, 1, 0]
 ];
+var lol_graph = [
+    [0, 8, 2, 0, 5, 1, 7, 3, 5, 9, 3, 7],
+    [8, 0, 7, 5, 7, 1, 9, 1, 1, 6, 6, 9],
+    [2, 7, 0, 9, 3, 5, 1, 9, 1, 0, 8, 0],
+    [0, 5, 9, 0, 8, 8, 4, 0, 3, 5, 7, 8],
+    [5, 7, 3, 8, 0, 1, 7, 3, 0, 6, 8, 9],
+    [1, 1, 5, 8, 1, 0, 7, 0, 0, 8, 6, 9],
+    [7, 9, 1, 4, 7, 7, 0, 0, 7, 2, 5, 8],
+    [3, 1, 9, 0, 3, 0, 0, 0, 1, 8, 8, 1],
+    [5, 1, 1, 3, 0, 0, 7, 1, 0, 8, 6, 9],
+    [9, 6, 0, 5, 6, 8, 2, 8, 8, 0, 2, 7],
+    [3, 6, 8, 7, 8, 6, 5, 8, 6, 2, 0, 4],
+    [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
+];
 function main() {
-    var g = new Graph(list_g_1);
-    g.show();
-    g.showMatrix();
-    console.log(dijkstra(g, 0));
+    var g = new Graph(lol_graph);
+    console.log(dijkstra(g, '3', '11'));
 }
 main();
