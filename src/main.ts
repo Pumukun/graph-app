@@ -176,7 +176,7 @@ function dijkstra(pgraph: Graph<any>, v1: string, v2?: string) {
 
     if (v2) {
         if (distances[v2] === Infinity) {
-            return -1; // Вершина v2 недостижима из v1
+            return -1;
         }
 
         const path: { [key: string]: number } = {};
