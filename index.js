@@ -4,28 +4,30 @@ var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
 
 var matrix = [
   [0, 1, 1, 0],
-  [1, 0, 0, 1],
-  [1, 0, 0, 1],
-  [0, 1, 1, 0]
+  [1, 0, 0, 2],
+  [1, 0, 0, 2],
+  [0, 2, 2, 0]
 ];
 
 var mat_g_1 = [
   [0, 3, 2, 0, 10], 
-  [1, 0, 0, 5, 0], 
-  [49, 0, 0, 0, 1], 
-  [0, 1, 0, 0, 1], 
-  [1, 0, 3, 45, 0]
+  [3, 0, 7, 5, 0], 
+  [2, 7, 0, 0, 1], 
+  [0, 5, 0, 0, 45], 
+  [10, 0, 1, 45, 0]
 ];
 
 var mat_g_2 = [
-  [0, 1, 0, 0, 2, 5, 1],
-  [4, 0, 6, 2, 0, 5, 0],
-  [0, 0, 0, 2, 0, 0, 0],
-  [5, 3, 0, 0, 6, 0, 0],
-  [0, 0, 4, 0, 7, 0, 0],
-  [2, 0, 0, 8, 0, 0, 7],
+  [0, 1, 0, 5, 2, 5, 1],
+  [1, 0, 6, 3, 0, 5, 0],
+  [0, 6, 0, 2, 4, 6, 0],
+  [5, 3, 2, 0, 6, 0, 9],
+  [2, 0, 4, 6, 7, 9, 1],
+  [5, 0, 6, 7, 0, 0, 9],
   [1, 0, 0, 9, 1, 9, 0]
 ];
+
+var GRAPH = mat_g_2;
 
 function matrixToGraph(matrix, graph) {
   for (let i = 0; i < matrix.length; i++) {
@@ -41,7 +43,7 @@ function matrixToGraph(matrix, graph) {
   }
 };
 
-matrixToGraph(mat_g_2, graph);
+matrixToGraph(GRAPH, graph);
 
 graphics.node(function(node) {
   var ui = Viva.Graph.svg('g'),
@@ -75,9 +77,9 @@ graphics.link(function(link){
   linkUI.attr("d", data);
 });
 
-var gr = new Graph(mat_g_2);
-var start = '3'
-var end = '6'
+var gr = new Graph(GRAPH);
+var start = '2';
+var end = '6';
 var list = dijkstra(gr, start, end);
 list = list[Object.keys(list)[0]];
 
@@ -101,11 +103,26 @@ var renderer = Viva.Graph.View.renderer(graph, {
 
 renderer.run();
 
-for (var i = 0; i < path.length; i++) {
+graphics.getNodeUI(start).childNodes[0].attr('stroke', 'blue').attr('stroke-width', '2px');
+graphics.getNodeUI(end).childNodes[0].attr('stroke', 'red').attr('stroke-width', '2px');
+
+for (let i = 1; i < path.length - 1; i++) {
+  graphics.getNodeUI(path[i]).childNodes[0].attr('stroke-width', '2px');
+}
+ 
+for (let i = 0; i < path.length; i++) {
   graph.forEachLink(function(link) {
-    var linkUI = graphics.getLinkUI(link.id);
-  
-    if ((link.fromId === path[i] && link.toId === path[i+1]) || (link.fromId === path[i+1] && link.toId === path[i])) {
+    let linkUI = graphics.getLinkUI(link.id);
+
+    let tmpNode = path[i];
+    let successorNode = path[i+1];
+
+    let fromId = link.fromId;
+    let toId = link.toId;
+
+    console.log(tmpNode, successorNode, fromId, toId);
+
+    if ((tmpNode == fromId && successorNode == toId) || (tmpNode == toId && successorNode == fromId)) {
       console.log('lol')
       linkUI.attr('stroke', 'red');
     }
