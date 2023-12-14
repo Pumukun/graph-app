@@ -1,11 +1,6 @@
 var graph = Viva.Graph.graph();
 
-
 var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
-// graph.addNode(0);
-// graph.addNode(2);
-// graph.addLink(1, 2);
-// graph.addLink(0, 2);
 
 var matrix = [
   [0, 1, 1, 0],
@@ -22,22 +17,17 @@ var mat_g_1 = [
   [1, 0, 3, 45, 0]
 ];
 
-var lol_graph = [
-  [0, 8, 2, 0, 5, 1, 7, 3, 5, 9, 3, 7],
-  [8, 0, 7, 5, 7, 1, 9, 1, 1, 6, 6, 9],
-  [2, 7, 0, 9, 3, 5, 1, 9, 1, 0, 8, 0],
-  [0, 5, 9, 0, 8, 8, 4, 0, 3, 5, 7, 8],
-  [5, 7, 3, 8, 0, 1, 7, 3, 0, 6, 8, 9],
-  [1, 1, 5, 8, 1, 0, 7, 0, 0, 8, 6, 9],
-  [7, 9, 1, 4, 7, 7, 0, 0, 7, 2, 5, 8],
-  [3, 1, 9, 0, 3, 0, 0, 0, 1, 8, 8, 1],
-  [5, 1, 1, 3, 0, 0, 7, 1, 0, 8, 6, 9],
-  [9, 6, 0, 5, 6, 8, 2, 8, 8, 0, 2, 7],
-  [3, 6, 8, 7, 8, 6, 5, 8, 6, 2, 0, 4],
-  [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
-]
+var mat_g_2 = [
+  [0, 1, 0, 0, 2, 5, 1],
+  [4, 0, 6, 2, 0, 5, 0],
+  [0, 0, 0, 2, 0, 0, 0],
+  [5, 3, 0, 0, 6, 0, 0],
+  [0, 0, 4, 0, 7, 0, 0],
+  [2, 0, 0, 8, 0, 0, 7],
+  [1, 0, 0, 9, 1, 9, 0]
+];
 
-function matrixToGraph(matrix) {
+function matrixToGraph(matrix, graph) {
   for (let i = 0; i < matrix.length; i++) {
     graph.addNode(i);
   }
@@ -51,19 +41,20 @@ function matrixToGraph(matrix) {
   }
 };
 
-matrixToGraph(mat_g_1);
+matrixToGraph(mat_g_2, graph);
 
 graphics.node(function(node) {
   var ui = Viva.Graph.svg('g'),
 
-  svgText = Viva.Graph.svg('text').attr('y', '4px')
+  svgText = Viva.Graph.svg('text').attr('y', '5px')
                                   .attr('text-anchor', 'middle')
                                   .attr('fill', 'black')
                                   .text(node.id);
 
   img = Viva.Graph.svg('circle')
-                  .attr('fill', 'lightblue')
-                  .attr('r', nodeSize/2);
+                  .attr('fill', 'white')
+                  .attr('r', nodeSize/1.5)
+                  .attr('stroke', 'gray');
   
   ui.append(img);
   ui.append(svgText);
@@ -72,8 +63,51 @@ graphics.node(function(node) {
   nodeUI.attr('transform', 'translate(' + pos.x + ',' + pos.y + ')');
 });
 
+graphics.link(function(link){
+  return Viva.Graph.svg('path')
+             .attr('stroke', 'black')
+             .attr('stroke-width', '2');
+}).placeLink(function(linkUI, fromPos, toPos) {
+  // linkUI - is the object returend from link() callback above.
+  var data = 'M' + fromPos.x + ',' + fromPos.y +
+             'L' + toPos.x + ',' + toPos.y;
+  
+  linkUI.attr("d", data);
+});
+
+var gr = new Graph(mat_g_2);
+var start = '3'
+var end = '6'
+var list = dijkstra(gr, start, end);
+list = list[Object.keys(list)[0]];
+
+console.log('list: ', list);
+
+var path = [start].concat(Object.keys(list));
+
+console.log('path: ', path);
+
+var layout = Viva.Graph.Layout.forceDirected(graph, {
+  springLength : 70,
+  springCoeff : 0.00005,
+  dragCoeff : 0.07,
+  gravity : -8
+});
+
 var renderer = Viva.Graph.View.renderer(graph, {
-  graphics : graphics
+  graphics: graphics,
+  layout: layout
 });
 
 renderer.run();
+
+for (var i = 0; i < path.length; i++) {
+  graph.forEachLink(function(link) {
+    var linkUI = graphics.getLinkUI(link.id);
+  
+    if ((link.fromId === path[i] && link.toId === path[i+1]) || (link.fromId === path[i+1] && link.toId === path[i])) {
+      console.log('lol')
+      linkUI.attr('stroke', 'red');
+    }
+  });
+}

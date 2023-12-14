@@ -10,9 +10,6 @@ class Graph {
             this.size = Object.keys(this.adjList).length;
             this.adjMatrix = this.toMatrix(this.adjList);
         }
-        else {
-            throw "lolxd";
-        }
     }
     toList(arg) {
         let list = new Object();
@@ -139,7 +136,7 @@ function dijkstra(pgraph, v1, v2) {
     }
     if (v2) {
         if (distances[v2] === Infinity) {
-            return -1; // Вершина v2 недостижима из v1
+            return -1;
         }
         const path = {};
         let currentVertex = v2;
@@ -172,9 +169,13 @@ var list_g_2 = {
     2: { 0: 1, 1: 1 }
 };
 var mat_g_2 = [
-    [1, 1, 1],
-    [1, 0, 1],
-    [1, 1, 0]
+    [0, 1, 0, 0, 2, 5, 1],
+    [4, 0, 6, 2, 0, 5, 0],
+    [0, 0, 0, 2, 0, 0, 0],
+    [5, 3, 0, 0, 6, 0, 0],
+    [0, 0, 4, 0, 7, 0, 0],
+    [2, 0, 0, 8, 0, 0, 7],
+    [1, 0, 0, 9, 1, 9, 0]
 ];
 var lol_graph = [
     [0, 8, 2, 0, 5, 1, 7, 3, 5, 9, 3, 7],
@@ -191,7 +192,7 @@ var lol_graph = [
     [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
 ];
 function main() {
-    var g = new Graph(mat_g_1);
-    console.log(dijkstra(g, '0'));
+    var g = new Graph(mat_g_2);
+    console.log(dijkstra(g, '3', '6'));
 }
 main();
