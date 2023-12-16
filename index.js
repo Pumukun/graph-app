@@ -20,14 +20,14 @@ var mat_g_1 = [
 var mat_g_2 = [
   [0, 1, 0, 5, 2, 5, 1],
   [1, 0, 6, 3, 0, 5, 0],
-  [0, 6, 0, 2, 4, 6, 0],
-  [5, 3, 2, 0, 6, 0, 9],
+  [0, 6, 0, 0, 4, 6, 0],
+  [5, 3, 0, 2, 6, 0, 9],
   [2, 0, 4, 6, 7, 9, 1],
   [5, 0, 6, 7, 0, 0, 9],
   [1, 0, 0, 9, 1, 9, 0]
 ];
 
-var GRAPH = mat_g_1;
+var GRAPH = mat_g_2;
 
 function matrixToGraph(matrix, graph) {
   for (let i = 0; i < matrix.length; i++) {
@@ -76,7 +76,6 @@ graphics.link(function(link){
   linkUI.attr("d", data);
 });
 
-
 var layout = Viva.Graph.Layout.forceDirected(graph, {
   springLength : 70,
   springCoeff : 0.00005,
@@ -100,7 +99,3 @@ var defs = graphics.getSvgRoot().append('defs');
 defs.innerHTML = '<pattern id="dotGrid" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="black" /></pattern>';
 
 renderer.run();
-
-
-
-

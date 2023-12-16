@@ -63,10 +63,11 @@
     
     <div id="inputDiv">
         <label>start: </label>
-        <input id="startVertex"></input>
+        <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
         <label>end: </label>
-        <input id="endVertex"></input>
+        <input id="endVertex" onclick="document.getElementById('endVertex').value = '';"></input>
         <button id="findPathBtn" style="float: right;">find path</button>
+        <input type="range" id="seekBar" min="0" value="0" step="0.01" style="width: 400px;">
     </div>
 
     <script>
@@ -88,6 +89,11 @@
             var gr = new Graph(GRAPH);
             var start = startVertexInput.value;
             var end = endVertexInput.value;
+            if (end < start) {
+                let oend = end;
+                end = start;
+                start = oend;
+            }
             var list = dijkstra(gr, start, end);
             console.log(list);
             list = list[Object.keys(list)[0]];
@@ -120,6 +126,14 @@
                 });
             }
         });
+
+        var springLength = 70;
+        var springCoeff = 0.00005;
+
+
+
+        layout.simulator.springLength(springLength)
+        layout.simulator.springCoeff(springCoeff)
     </script>
 </body>
 </html>
