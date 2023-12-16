@@ -15,7 +15,6 @@
         #inputDiv {
             display: block;
             width: 75%;
-            padding-top: 10px;
             margin: auto;
         }
 
@@ -53,7 +52,13 @@
             outline: none;
             border-color: #4285f4;
             box-shadow: 0 0 8px rgba(66,133,244,0.3);
-        }    
+        }
+
+        #dataMenu {
+            font-size: 20px;
+            display: inline-block;
+            margin-left: 5%;
+        }
     </style>
 </head>
 <body style="height: 100%;">
@@ -64,10 +69,22 @@
     <div id="inputDiv">
         <label>start: </label>
         <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
+
         <label>end: </label>
         <input id="endVertex" onclick="document.getElementById('endVertex').value = '';"></input>
+
         <button id="findPathBtn" style="float: right;">find path</button>
-        <input type="range" id="seekBar" min="0" value="0" step="0.01" style="width: 400px;">
+
+        <input id="springLengthSlider" type="range" id="seekBar" min="0" max="500" value="70" step="1" style="width: 200px;">
+        <label id="lengthLabel">70</label>
+
+        <input id="springCoeffSlider" type="range" id="seekBar" min="0" max="0.0001" value="0.00005" step="0.000001" style="width: 200px;">
+        <label id="coeffLabel">0.00005</label>
+
+        <div id="dataMenu">
+            <label id="pathCostLabel">0</label><br>
+            <label id="pathLabel">[]</label>
+        </div>
     </div>
 
     <script>
@@ -84,6 +101,9 @@
         var findBtn = document.getElementById('findPathBtn');
         var startVertexInput = document.getElementById('startVertex');
         var endVertexInput = document.getElementById('endVertex');
+
+        var pathCostLabel = document.getElementById('pathCostLabel');
+        var pathLabel = document.getElementById('pathLabel');
          
         findBtn.addEventListener('click', function() {
             var gr = new Graph(GRAPH);
@@ -95,10 +115,19 @@
                 start = oend;
             }
             var list = dijkstra(gr, start, end);
-            console.log(list);
+            pathCostLabel.innerHTML = Object.values(list[Object.keys(list)[0]])[Object.values(list[Object.keys(list)[0]]).length-1];
+
             list = list[Object.keys(list)[0]];
 
             var path = [start].concat(Object.keys(list));
+            
+            var pathStr = ' ';
+            for (var i = 0; i < path.length; i++) {
+                pathStr += path[i];
+                pathStr += ' => ';
+            }
+            pathStr = pathStr.slice(0, -1).slice(0, -1).slice(0, -1) + ' ';
+            pathLabel.innerHTML = '[' + pathStr + ']';
             
             console.log(path);
 
@@ -127,13 +156,22 @@
             }
         });
 
-        var springLength = 70;
-        var springCoeff = 0.00005;
+        var springLength = document.getElementById('springLengthSlider');
+        var springCoeff = document.getElementById('springCoeffSlider');
 
+        var lenLabel = document.getElementById('lengthLabel');
+        var coeffLabel = document.getElementById('coeffLabel');
 
-
-        layout.simulator.springLength(springLength)
-        layout.simulator.springCoeff(springCoeff)
+        springLength.addEventListener('input', function() {
+            layout.simulator.springLength(springLength.value);
+            lenLabel.innerHTML = "";
+            lenLabel.innerHTML = springLength.value;
+        });
+        springCoeff.addEventListener('input', function() {
+            layout.simulator.springCoeff(springCoeff.value);
+            coeffLabel.innerHTML = "";
+            coeffLabel.innerHTML = springCoeff.value;
+        });
     </script>
 </body>
 </html>

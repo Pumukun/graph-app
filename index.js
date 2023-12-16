@@ -2,7 +2,7 @@ var graph = Viva.Graph.graph();
 
 var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
 
-var matrix_1 = [
+const matrix_1 = [
   [0, 1, 1, 0],
   [1, 0, 0, 2],
   [1, 0, 0, 2],
@@ -27,7 +27,18 @@ var mat_g_2 = [
   [1, 0, 0, 9, 1, 9, 0]
 ];
 
-var GRAPH = mat_g_2;
+var mat_g_3 = [
+  [0, 2, 0, 3, 0, 0, 0, 0],
+  [2, 0, 4, 0, 0, 6, 0, 0],
+  [0, 4, 0, 3, 0, 0, 0, 0],
+  [3, 0, 3, 0, 5, 0, 0, 0],
+  [0, 0, 0, 5, 0, 6, 0, 0],
+  [0, 6, 0, 0, 6, 0, 7, 0],
+  [0, 0, 0, 0, 0, 7, 0, 8],
+  [0, 0, 0, 0, 0, 0, 8, 0]
+];
+
+var GRAPH = mat_g_3;
 
 function matrixToGraph(matrix, graph) {
   for (let i = 0; i < matrix.length; i++) {
@@ -85,7 +96,8 @@ var layout = Viva.Graph.Layout.forceDirected(graph, {
 
 var renderer = Viva.Graph.View.renderer(graph, {
   graphics: graphics,
-  layout: layout
+  layout: layout,
+  interactive: 'node scroll'
 });
 
 var dotGrid = document.createElement('rect');
