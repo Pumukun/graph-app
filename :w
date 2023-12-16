@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <title>xd</title>
+    <style>
+        svg {
+            display: block;
+            width: 75%;
+            height: 90%;
+            border: 2px solid gray;
+            border-radius: 5px;
+            margin: auto;
+        }
+        
+        input {
+            align-items: center;
+            margin: auto;
+        }
+    </style>
+</head>
+<body style="height: 100%;">
+    <script src="./src/vivagraph.js"></script>
+    <script src="./dist/main.js"></script>
+    <script src="./index.js"></script>
+
+    <input id="startVertex"></input>
+    <input id="endVertex"></input>
+</body>
+</html>

@@ -1,24 +1,125 @@
 <!DOCTYPE html>
 <html style="height: 100%;">
-<head style="height: 100%;">
+<head>
     <title>xd</title>
     <style>
         svg {
-            width: 100%;
-            height: 100%;
+            display: block;
+            width: 75%;
+            height: 90%;
+            border: 2px solid gray;
+            border-radius: 5px;
+            margin: auto;
+        }
+        
+        #inputDiv {
+            display: block;
+            width: 75%;
+            padding-top: 10px;
+            margin: auto;
         }
 
-        #circleNode {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        button {
+            background: #4285f4;
             color: white;
+            border: none;
+            padding: 15px 35px;
+            text-align: center;
+            text-decoration: none;
+            /*display: inline-block;*/
+            font-size: 20px;
+            margin: 4px 0px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.15);
         }
+
+        button:hover {
+            background-color: #4285f4;
+            box-shadow: 0 0 3px 3px rgba(66,133,244,0.3);
+            outline: none;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 8px rgba(66,133,244,0.3);
+        }    
     </style>
 </head>
 <body style="height: 100%;">
     <script src="./src/vivagraph.js"></script>
     <script src="./dist/main.js"></script>
     <script src="./index.js"></script>
+    
+    <div id="inputDiv">
+        <label>start: </label>
+        <input id="startVertex"></input>
+        <label>end: </label>
+        <input id="endVertex"></input>
+        <button id="findPathBtn" style="float: right;">find path</button>
+    </div>
+
+    <script>
+        function refreshGraph() {
+            graph.forEachLink(function(link) {
+                let linkUI = graphics.getLinkUI(link.id);
+                linkUI.attr('stroke', 'black');
+            });
+            graph.forEachNode(function(node) {
+                graphics.getNodeUI(node.id).childNodes[0].attr('stroke', 'gray').attr('stroke-width', '1px');
+            });
+        }
+
+        var findBtn = document.getElementById('findPathBtn');
+        var startVertexInput = document.getElementById('startVertex');
+        var endVertexInput = document.getElementById('endVertex');
+         
+        findBtn.addEventListener('click', function() {
+            var gr = new Graph(GRAPH);
+            var start = startVertexInput.value;
+            var end = endVertexInput.value;
+            var list = dijkstra(gr, start, end);
+            console.log(list);
+            list = list[Object.keys(list)[0]];
+
+            var path = [start].concat(Object.keys(list));
+            
+            console.log(path);
+
+            refreshGraph();
+            graphics.getNodeUI(start).childNodes[0].attr('stroke', 'blue').attr('stroke-width', '2px');
+            graphics.getNodeUI(end).childNodes[0].attr('stroke', 'red').attr('stroke-width', '2px'); 
+
+            for (let i = 1; i < path.length - 1; i++) {
+                graphics.getNodeUI(path[i]).childNodes[0].attr('stroke-width', '2px');
+            }
+ 
+            for (let i = 0; i < path.length; i++) {
+                graph.forEachLink(function(link) {
+                    let linkUI = graphics.getLinkUI(link.id);
+
+                    let tmpNode = path[i];
+                    let successorNode = path[i+1];
+
+                    let fromId = link.fromId;
+                    let toId = link.toId;
+ 
+                    if ((tmpNode == fromId && successorNode == toId) || (tmpNode == toId && successorNode == fromId)) {
+                        linkUI.attr('stroke', 'red');
+                    } 
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -2,7 +2,7 @@ var graph = Viva.Graph.graph();
 
 var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
 
-var matrix = [
+var matrix_1 = [
   [0, 1, 1, 0],
   [1, 0, 0, 2],
   [1, 0, 0, 2],
@@ -10,11 +10,11 @@ var matrix = [
 ];
 
 var mat_g_1 = [
-  [0, 3, 2, 0, 10], 
+  [0, 3, 2, 0, 0], 
   [3, 0, 7, 5, 0], 
-  [2, 7, 0, 0, 1], 
-  [0, 5, 0, 0, 45], 
-  [10, 0, 1, 45, 0]
+  [2, 7, 0, 0, 0], 
+  [0, 5, 0, 0, 0], 
+  [0, 0, 0, 0, 0]
 ];
 
 var mat_g_2 = [
@@ -27,7 +27,7 @@ var mat_g_2 = [
   [1, 0, 0, 9, 1, 9, 0]
 ];
 
-var GRAPH = mat_g_2;
+var GRAPH = mat_g_1;
 
 function matrixToGraph(matrix, graph) {
   for (let i = 0; i < matrix.length; i++) {
@@ -36,7 +36,7 @@ function matrixToGraph(matrix, graph) {
 
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix[i].length; j++) {
-      if (matrix[i][j] > 0) {
+      if (matrix[i][j] !== 0) {
         graph.addLink(i, j);
       }
     }
@@ -70,24 +70,12 @@ graphics.link(function(link){
              .attr('stroke', 'black')
              .attr('stroke-width', '2');
 }).placeLink(function(linkUI, fromPos, toPos) {
-  // linkUI - is the object returend from link() callback above.
   var data = 'M' + fromPos.x + ',' + fromPos.y +
              'L' + toPos.x + ',' + toPos.y;
   
   linkUI.attr("d", data);
 });
 
-var gr = new Graph(GRAPH);
-var start = '2';
-var end = '6';
-var list = dijkstra(gr, start, end);
-list = list[Object.keys(list)[0]];
-
-console.log('list: ', list);
-
-var path = [start].concat(Object.keys(list));
-
-console.log('path: ', path);
 
 var layout = Viva.Graph.Layout.forceDirected(graph, {
   springLength : 70,
@@ -101,30 +89,18 @@ var renderer = Viva.Graph.View.renderer(graph, {
   layout: layout
 });
 
+var dotGrid = document.createElement('rect');
+dotGrid.setAttribute('width', '100%');
+dotGrid.setAttribute('height', '100%');
+dotGrid.setAttribute('fill', 'url(#dotGrid)');
+graphics.getSvgRoot().append('g').append(dotGrid);
+
+var defs = graphics.getSvgRoot().append('defs');
+
+defs.innerHTML = '<pattern id="dotGrid" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="black" /></pattern>';
+
 renderer.run();
 
-graphics.getNodeUI(start).childNodes[0].attr('stroke', 'blue').attr('stroke-width', '2px');
-graphics.getNodeUI(end).childNodes[0].attr('stroke', 'red').attr('stroke-width', '2px');
 
-for (let i = 1; i < path.length - 1; i++) {
-  graphics.getNodeUI(path[i]).childNodes[0].attr('stroke-width', '2px');
-}
- 
-for (let i = 0; i < path.length; i++) {
-  graph.forEachLink(function(link) {
-    let linkUI = graphics.getLinkUI(link.id);
 
-    let tmpNode = path[i];
-    let successorNode = path[i+1];
 
-    let fromId = link.fromId;
-    let toId = link.toId;
-
-    console.log(tmpNode, successorNode, fromId, toId);
-
-    if ((tmpNode == fromId && successorNode == toId) || (tmpNode == toId && successorNode == fromId)) {
-      console.log('lol')
-      linkUI.attr('stroke', 'red');
-    }
-  });
-}
