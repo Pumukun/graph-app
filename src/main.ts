@@ -31,6 +31,9 @@ class Graph<T> {
 
     private toMatrix(arg: Object): T[][] {
         let matrix = new Array(Object.keys(arg).length).fill(0).map(() => new Array(Object.keys(arg).length).fill(0));
+        if (parseInt(Object.keys(arg)[0]) == 1) {
+            matrix = new Array(Object.keys(arg).length+1).fill(0).map(() => new Array(Object.keys(arg).length+1).fill(0));
+        }
         for (const [key, val] of Object.entries(arg)) {
             for (const [ver, cost] of Object.entries(val)) {
                 matrix[key][ver] = cost;

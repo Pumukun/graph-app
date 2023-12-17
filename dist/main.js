@@ -27,6 +27,9 @@ class Graph {
     }
     toMatrix(arg) {
         let matrix = new Array(Object.keys(arg).length).fill(0).map(() => new Array(Object.keys(arg).length).fill(0));
+        if (Object.keys(arg)[0] == 1) {
+            matrix = new Array(Object.keys(arg).length+1).fill(0).map(() => new Array(Object.keys(arg).length+1).fill(0));
+        }
         for (const [key, val] of Object.entries(arg)) {
             for (const [ver, cost] of Object.entries(val)) {
                 matrix[key][ver] = cost;
@@ -150,11 +153,11 @@ function dijkstra(pgraph, v1, v2) {
     return distances;
 }
 var list_g_1 = {
-    0: { 1: 3, 2: 2, 4: 10 },
-    1: { 0: 3, 3: 5 },
-    2: { 0: 49, 4: 1 },
-    3: { 1: 1, 4: 1 },
-    4: { 0: 1, 2: 3, 3: 45 }
+    1: { 2: 3, 3: 2, 5: 10 },
+    2: { 1: 3, 4: 5 },
+    3: { 1: 49, 5: 1 },
+    4: { 2: 1, 5: 1 },
+    5: { 1: 1, 3: 3, 4: 45 }
 };
 var mat_g_1 = [
     [0, 3, 2, 0, 10],
@@ -192,7 +195,7 @@ var lol_graph = [
     [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
 ];
 function main() {
-    var g = new Graph(mat_g_2);
-    console.log(dijkstra(g, '3', '6'));
+    var g = new Graph(list_g_1);
+    console.log(dijkstra(g, '3'));
 }
 main();

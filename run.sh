@@ -1,3 +1,3 @@
 #!/bin/bash
 tsc -p tsconfig.json
-node dist/main.js
+npm start
