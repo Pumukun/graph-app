@@ -2,57 +2,7 @@ var graph = Viva.Graph.graph();
 
 var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
 
-const matrix_1 = [
-	[0, 1, 1, 0],
-  	[1, 0, 0, 2],
-  	[1, 0, 0, 2],
-  	[0, 2, 2, 0]
-];
-
-var mat_g_1 = [
-  	[0, 3, 2, 0, 0], 
-  	[3, 0, 7, 5, 0], 
-  	[2, 7, 0, 0, 0], 
-  	[0, 5, 0, 0, 0], 
-  	[0, 0, 0, 0, 0]
-];
-
-var mat_g_2 = [
-  	[0, 1, 0, 5, 2, 5, 1],
-  	[1, 0, 6, 3, 0, 5, 0],
-  	[0, 6, 0, 0, 4, 6, 0],
-  	[5, 3, 0, 2, 6, 0, 9],
-  	[2, 0, 4, 6, 7, 9, 1],
-  	[5, 0, 6, 7, 0, 0, 9],
-  	[1, 0, 0, 9, 1, 9, 0]
-];
-
-var mat_g_3 = [
-  	[0, 2, 0, 3, 0, 0, 0, 0],
-  	[2, 0, 4, 0, 0, 6, 0, 0],
-  	[0, 4, 0, 3, 0, 0, 0, 0],
-  	[3, 0, 3, 0, 5, 0, 0, 0],
-  	[0, 0, 0, 5, 0, 6, 0, 0],
-  	[0, 6, 0, 0, 6, 0, 7, 0],
-  	[0, 0, 0, 0, 0, 7, 0, 8],
-  	[0, 0, 0, 0, 0, 0, 8, 0]
-];
-
 var GRAPH = new Graph(example_graph);
-
-function matrixToGraph(matrix, graph) {
-  	for (let i = 0; i < matrix.length; i++) {
-    	graph.addNode(i);
-  	}
-
-  	for (let i = 0; i < matrix.length; i++) {
-    	for (let j = i + 1; j < matrix[i].length; j++) {
-      		if (matrix[i][j] !== 0) {
-        		graph.addLink(i, j);
-      		}
-    	}
-  	}
-};
 
 matrixToGraph(GRAPH.getMatrix(), graph);
 
@@ -99,15 +49,5 @@ var renderer = Viva.Graph.View.renderer(graph, {
   	layout: layout,
   	interactive: 'node scroll'
 });
-
-var dotGrid = document.createElement('rect');
-dotGrid.setAttribute('width', '100%');
-dotGrid.setAttribute('height', '100%');
-dotGrid.setAttribute('fill', 'url(#dotGrid)');
-graphics.getSvgRoot().append('g').append(dotGrid);
-
-var defs = graphics.getSvgRoot().append('defs');
-
-defs.innerHTML = '<pattern id="dotGrid" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="black" /></pattern>';
 
 renderer.run();

@@ -30,10 +30,9 @@ class Graph<T> {
     }
 
     private toMatrix(arg: Object): T[][] {
-        let matrix = new Array(Object.keys(arg).length).fill(0).map(() => new Array(Object.keys(arg).length).fill(0));
-        if (parseInt(Object.keys(arg)[0]) == 1) {
-            matrix = new Array(Object.keys(arg).length+1).fill(0).map(() => new Array(Object.keys(arg).length+1).fill(0));
-        }
+        const maxVertex = Math.max(...Object.keys(arg).map(Number));
+        const matrix = new Array(maxVertex + 1).fill(0).map(() => new Array(maxVertex + 1).fill(0));
+
         for (const [key, val] of Object.entries(arg)) {
             for (const [ver, cost] of Object.entries(val)) {
                 matrix[key][ver] = cost;
@@ -185,7 +184,7 @@ function dijkstra(pgraph: Graph<any>, v1: string, v2?: string) {
 
         while (currentVertex !== v1) {
             const previousVertex = previous[currentVertex];
-            path[currentVertex] = graph[previousVertex][currentVertex];
+            path[currentVertex] = distances[currentVertex];
             currentVertex = previousVertex!;
         }
 
@@ -227,23 +226,8 @@ var mat_g_2 = [
     [1, 0, 0, 9, 1, 9, 0]
   ];
 
-var lol_graph = [
-    [0, 8, 2, 0, 5, 1, 7, 3, 5, 9, 3, 7],
-    [8, 0, 7, 5, 7, 1, 9, 1, 1, 6, 6, 9],
-    [2, 7, 0, 9, 3, 5, 1, 9, 1, 0, 8, 0],
-    [0, 5, 9, 0, 8, 8, 4, 0, 3, 5, 7, 8],
-    [5, 7, 3, 8, 0, 1, 7, 3, 0, 6, 8, 9],
-    [1, 1, 5, 8, 1, 0, 7, 0, 0, 8, 6, 9],
-    [7, 9, 1, 4, 7, 7, 0, 0, 7, 2, 5, 8],
-    [3, 1, 9, 0, 3, 0, 0, 0, 1, 8, 8, 1],
-    [5, 1, 1, 3, 0, 0, 7, 1, 0, 8, 6, 9],
-    [9, 6, 0, 5, 6, 8, 2, 8, 8, 0, 2, 7],
-    [3, 6, 8, 7, 8, 6, 5, 8, 6, 2, 0, 4],
-    [7, 9, 0, 8, 9, 9, 8, 1, 9, 7, 4, 0]
-]
-
 function main() {
-    var g = new Graph<number>(mat_g_2);
-    console.log(dijkstra(g, '3', '6'));
+    var g = new Graph<number>(list_g_1);
+    console.log(dijkstra(g, '1', '3'));
 } main();
 
