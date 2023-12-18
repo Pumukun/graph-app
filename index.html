@@ -1,41 +1,49 @@
 <!DOCTYPE html>
-<html style="height: 100%;">
+<html style="height: 98%;">
 <head>
     <title>xd</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body style="height: 100%;">
     <!-- js imports -->
-    <script src="./ultra_graph.js"></script>
+    <script src="./src/ultra_graph.js"></script>
     <script src="./src/vivagraph.js"></script>
     <script src="./src/functions.js"></script>
     <script src="./dist/main.js"></script>
     <script src="./index.js"></script>
-    
-    <div id="inputDiv">
-        <label>start: </label>
-        <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
 
-        <label>end: </label>
-        <input id="endVertex" onclick="document.getElementById('endVertex').value = '';"></input>
-        <div style="display: inline-block;">
-            <input id="springLengthSlider" type="range" id="seekBar" min="0" max="500" value="70" step="1" style="width: 200px;">
+    <div class="wrapper">
+        <div id="inputDiv" class="element">
+            <label style="font-weight: bold; font-size: 25px;">start: </label>
+            <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
+
+            <label style="font-weight: bold; font-size: 25px;">end: </label>
+            <input id="endVertex" onclick="document.getElementById('endVertex').value = '';"></input>
+        </div>
+        <div id="sliderMenu" class="element">
+            <input id="springLengthSlider" type="range" id="seekBar" min="0" max="500" value="70" step="1">
             <label id="lengthLabel">70</label>
-    
-            <input id="springCoeffSlider" type="range" id="seekBar" min="0" max="0.0001" value="0.00005" step="0.000001" style="width: 200px;">
+
+            <input id="springCoeffSlider" type="range" id="seekBar" min="0" max="0.0001" value="0.00005" step="0.000001">
             <label id="coeffLabel">0.00005</label>
         </div>
-        <div id="dataMenu">
-            <label>cost: </label>
-            <label id="pathCostLabel">0</label><br>
-            <label>path: </label>
+        <div id="dataMenu" class="element">
+            <label id="costTxt">cost: </label>
+            <label id="pathCostLabel">0</label>
+            <label id="pathTxt">path: </label>
             <label id="pathLabel">[]</label>
         </div>
-        <button id="findPathFromStart" style="float: right; margin-left: 5px;">from start</button>
-        <button id="findPathBtn" style="float: right;">find path</button>
+        <div id="buttonMenu" class="element">
+            <button id="findPathFromStart">from start</button>
+            <button id="findPathBtn">find path</button>
+        </div>
     </div>
  
     <script>
+        var mainSvg = document.querySelector('svg');
+        document.getElementsByClassName('wrapper')[0].prepend(mainSvg); 
+        
         function refreshGraph() {
             graph.forEachLink(function(link) {
                 let linkUI = graphics.getLinkUI(link.id);

@@ -1,0 +1,90 @@
+.wrapper {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 10% 40% 40% 10%;
+    grid-template-rows: 90% 10%;
+}
+
+.element {
+    width: 98%;
+    height: 100%;
+}
+
+svg {
+    display: grid;
+    grid-column-start: 1;
+    grid-column-end: 5;
+
+    width: 100%;
+    height: 99%;
+
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#inputDiv {
+    display: grid;
+
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 50% 50%;
+
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#startVertex, #endVertex {
+    font-size: 25px;
+    font-weight: bold;
+
+    margin: 7px 7px 7px 0;
+}
+
+#dataMenu {
+    font-weight: bold;
+    font-size: 25px;
+    display: grid;
+    
+    grid-template-columns: 10% 90%;
+    grid-template-rows: 20% 80%;
+
+    border: 2px solid gray;
+    border-radius: 5px;
+
+    overflow-y: scroll;
+}
+
+#sliderMenu {
+    display: grid;
+
+    grid-template-columns: 75% 25%;
+    grid-template-rows: 50% 50%;
+
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#springLengthSlider, #springCoeffSlider, #coeffLabel, #lengthLabel {
+    display: grid;
+    width: 95%;
+    margin-left: 20px;
+}
+
+#coeffLabel, #lengthLabel {
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 5%;
+    margin-left: 50px;
+}
+
+#buttonMenu {
+    display: grid;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#findPathFromStart, #findPathBtn {
+    margin: 7px;
+}
