@@ -19,7 +19,7 @@ button {
     text-align: center;
     text-decoration: none;
     /*display: inline-block;*/
-    font-size: 25px;
+    font-size: 1vw;
     font-weight: bold;
     margin: 4px 0px;
     transition: background-color 0.3s, box-shadow 0.3s;

@@ -1,25 +1,20 @@
 .wrapper {
     margin: auto;
+    grid-gap: 10px;
     width: 100%;
     height: 100%;
 
     display: grid;
-    grid-template-columns: 10% 40% 40% 10%;
-    grid-template-rows: 90% 10%;
-}
-
-.element {
-    width: 98%;
-    height: 100%;
+    grid-template-columns: 1fr 4fr 4fr 1fr;
+    grid-template-rows: 9fr 1fr;
 }
 
 svg {
     display: grid;
-    grid-column-start: 1;
-    grid-column-end: 5;
+    grid-column: 1 / 5;
 
     width: 100%;
-    height: 99%;
+    height: 100%;
 
     border: 2px solid gray;
     border-radius: 5px;
@@ -28,27 +23,29 @@ svg {
 #inputDiv {
     display: grid;
 
-    grid-template-columns: 30% 70%;
-    grid-template-rows: 50% 50%;
+    text-align: center;
+
+    grid-template-columns: 3fr 7fr;
+    grid-template-rows: 5fr 5fr;
 
     border: 2px solid gray;
     border-radius: 5px;
 }
 
 #startVertex, #endVertex {
-    font-size: 25px;
     font-weight: bold;
-
+    font-size: 1vw;
     margin: 7px 7px 7px 0;
 }
 
 #dataMenu {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 1vw;
+
     display: grid;
     
-    grid-template-columns: 10% 90%;
-    grid-template-rows: 20% 80%;
+    grid-template-columns: 1fr 9fr;
+    grid-template-rows: 2fr 8fr;
 
     border: 2px solid gray;
     border-radius: 5px;
@@ -58,9 +55,10 @@ svg {
 
 #sliderMenu {
     display: grid;
+    text-align: center;
 
-    grid-template-columns: 75% 25%;
-    grid-template-rows: 50% 50%;
+    grid-template-columns: 7fr 3fr;
+    grid-template-rows: 5fr 5fr;
 
     border: 2px solid gray;
     border-radius: 5px;
@@ -74,7 +72,7 @@ svg {
 
 #coeffLabel, #lengthLabel {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 1vw;
     margin-top: 5%;
     margin-left: 50px;
 }
