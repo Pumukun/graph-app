@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html style="height: 98%;">
+<head>
+    <title>xd</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body style="height: 100%;">
+    <!-- js imports -->
+    <script src="./src/ultra_graph.js"></script>
+    <script src="./src/vivagraph.js"></script>
+    <script src="./src/functions.js"></script>
+    <script src="./dist/main.js"></script>
+    <script src="./index.js"></script>
+
+    <div class="wrapper">
+        <div id="inputDiv" class="element">
+            <label style="font-weight: bold; font-size: 1vw;">start: </label>
+            <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
+
+            <label style="font-weight: bold; font-size: 1vw;">end: </label>
+            <input id="endVertex" onclick="document.getElementById('endVertex').value = '';"></input>
+        </div>
+        <div id="sliderMenu" class="element">
+            <input id="springLengthSlider" type="range" id="seekBar" min="0" max="500" value="70" step="1">
+            <label id="lengthLabel">70</label>
+
+            <input id="springCoeffSlider" type="range" id="seekBar" min="0" max="0.0001" value="0.00005" step="0.000001">
+            <label id="coeffLabel">0.00005</label>
+        </div>
+        <div id="dataMenu" class="element">
+            <label id="costTxt">cost: </label>
+            <label id="pathCostLabel">0</label>
+            <label id="pathTxt">path: </label>
+            <label id="pathLabel">[]</label>
+        </div>
+        <div id="buttonMenu" class="element">
+            <button id="findPathFromStart">from start</button>
+            <button id="findPathBtn">find path</button>
+        </div>
+    </div>
+ 
+    <script>
+        var mainSvg = document.querySelector('svg');
+        document.getElementsByClassName('wrapper')[0].prepend(mainSvg); 
+        
+        function refreshGraph() {
+            graph.forEachLink(function(link) {
+                let linkUI = graphics.getLinkUI(link.id);
+                linkUI.attr('stroke', 'black');
+            });
+            graph.forEachNode(function(node) {
+                graphics.getNodeUI(node.id).childNodes[0].attr('stroke', 'gray').attr('stroke-width', '1px');
+            });
+        }
+
+        var findBtn          = document.getElementById('findPathBtn');
+        var startVertexInput = document.getElementById('startVertex');
+        var endVertexInput   = document.getElementById('endVertex');
+
+        var pathCostLabel    = document.getElementById('pathCostLabel');
+        var pathLabel        = document.getElementById('pathLabel');
+         
+        findBtn.addEventListener('click', function() {
+            var graphTS = GRAPH;
+            var start = startVertexInput.value;
+            var end = endVertexInput.value;
+            if (end < start) {
+                let oend = end;
+                end = start;
+                start = oend;
+            }
+            var list = dijkstra(graphTS, start, end);
+            pathCostLabel.innerHTML = Object.values(list[Object.keys(list)[0]])[Object.values(list[Object.keys(list)[0]]).length - 1];
+            console.log(list);
+
+            list = list[Object.keys(list)[0]];
+            var path = [start].concat(Object.keys(list));
+            
+            var pathStr = ' ';
+            for (var i = 0; i < path.length; i++) {
+                pathStr += path[i];
+                pathStr += ' => ';
+            }
+            pathStr = pathStr.slice(0, -1).slice(0, -1).slice(0, -1) + ' ';
+            pathLabel.innerHTML = '[' + pathStr + ']';
+
+            refreshGraph();
+
+            graphics.getNodeUI(start).childNodes[0].attr('stroke', 'blue').attr('stroke-width', '2px');
+            graphics.getNodeUI(end).childNodes[0].attr('stroke', 'red').attr('stroke-width', '2px'); 
+
+            for (let i = 1; i < path.length - 1; i++) {
+                graphics.getNodeUI(path[i]).childNodes[0].attr('stroke-width', '2px');
+            }
+ 
+            for (let i = 0; i < path.length; i++) {
+                graph.forEachLink(function(link) {
+                    let linkUI = graphics.getLinkUI(link.id);
+
+                    let tmpNode = path[i];
+                    let successorNode = path[i + 1];
+
+                    let fromId = link.fromId;
+                    let toId = link.toId;
+ 
+                    if ((tmpNode == fromId && successorNode == toId) || (tmpNode == toId && successorNode == fromId)) {
+                        linkUI.attr('stroke', 'red');
+                    } 
+                });
+            }
+        });
+
+        var springLength = document.getElementById('springLengthSlider');
+        var springCoeff  = document.getElementById('springCoeffSlider');
+
+        var lenLabel     = document.getElementById('lengthLabel');
+        var coeffLabel   = document.getElementById('coeffLabel');
+
+        springLength.addEventListener('input', function() {
+            layout.simulator.springLength(springLength.value);
+            lenLabel.innerHTML = '';
+            lenLabel.innerHTML = springLength.value;
+        });
+        springCoeff.addEventListener('input', function() {
+            layout.simulator.springCoeff(springCoeff.value);
+            coeffLabel.innerHTML = '';
+            coeffLabel.innerHTML = springCoeff.value;
+        });
+
+        var fromStartBtn = document.getElementById('findPathFromStart');
+        fromStartBtn.addEventListener('click', function() {
+            var graphTS = GRAPH;
+            var start = startVertexInput.value;
+            var list = dijkstra(graphTS, start);
+            
+            pathLabel.innerHTML = objToStr(list);
+        });
+    </script>
+</body>
+</html>
