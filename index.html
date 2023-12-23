@@ -4,6 +4,7 @@
     <title>xd</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="float_menu.css">
 </head>
 <body style="height: 100%;">
     <!-- js imports -->
@@ -14,6 +15,10 @@
     <script src="./index.js"></script>
 
     <div class="wrapper">
+        <div id="topMenu" class="element">
+            <button id="btn1">1</button>
+            <button id="btn2">2</button>
+        </div>
         <div id="inputDiv" class="element">
             <label style="font-weight: bold; font-size: 1vw;">start: </label>
             <input id="startVertex" onclick="document.getElementById('startVertex').value = '';"></input>
@@ -37,6 +42,15 @@
         <div id="buttonMenu" class="element">
             <button id="findPathFromStart">from start</button>
             <button id="findPathBtn">find path</button>
+        </div>
+    </div>
+
+    <div id="floatMenu">
+        <div id="fMenuContent">
+            <button id="closeMenu">X</button>
+            <div id="inputFieldDiv">
+                <textarea id="inputField"></textarea>
+            </div>
         </div>
     </div>
  
@@ -136,6 +150,20 @@
             
             pathLabel.innerHTML = objToStr(list);
         });
+
+        const floatMenu = document.getElementById('floatMenu');
+        document.getElementById('btn1').addEventListener('click', () => {
+            floatMenu.style.display = 'flex';
+        });
+        floatMenu.addEventListener('click', (e) => {
+            if (e.target === floatMenu) {
+                floatMenu.style.display = 'none';
+            }
+        });
+        const closeMenuBtn = document.getElementById('closeMenu').addEventListener('click', () => {
+            floatMenu.style.display = 'none';
+        });
+
     </script>
 </body>
 </html>

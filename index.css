@@ -6,12 +6,20 @@
 
     display: grid;
     grid-template-columns: 1fr 4fr 4fr 1fr;
-    grid-template-rows: 9fr 1fr;
+    grid-template-rows: 0.5fr 8.5fr 1fr;
+
+    /*
+    grid-template-areas:
+    "h h h h h h h h h h h h"
+    "m m c c c c c c c c c c"
+    "f f f f f f f f f f f f";
+    */
 }
 
 svg {
     display: grid;
     grid-column: 1 / 5;
+    grid-row: 2;
 
     width: 100%;
     height: 100%;
@@ -20,8 +28,24 @@ svg {
     border-radius: 5px;
 }
 
+#topMenu {
+    display: grid;
+
+    grid-column: 1 / 5;
+    grid-row: 1;
+
+    grid-gap: 10px;
+
+    grid-template-columns: 5fr 5fr;
+
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
 #inputDiv {
     display: grid;
+
+    grid-row: 3;
 
     text-align: center;
 
@@ -42,6 +66,8 @@ svg {
     font-weight: bold;
     font-size: 1vw;
 
+    grid-row: 3;
+
     display: grid;
     
     grid-template-columns: 1fr 9fr;
@@ -56,6 +82,8 @@ svg {
 #sliderMenu {
     display: grid;
     text-align: center;
+
+    grid-row: 3;
 
     grid-template-columns: 7fr 3fr;
     grid-template-rows: 5fr 5fr;
@@ -79,10 +107,13 @@ svg {
 
 #buttonMenu {
     display: grid;
+
+    grid-row: 3;
+
     border: 2px solid gray;
     border-radius: 5px;
 }
 
-#findPathFromStart, #findPathBtn {
+#findPathFromStart, #findPathBtn, #btn1, #btn2 {
     margin: 7px;
 }

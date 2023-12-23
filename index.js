@@ -2,7 +2,7 @@ var graph = Viva.Graph.graph();
 
 var graphics = Viva.Graph.View.svgGraphics(), nodeSize = 24;
 
-var GRAPH = new Graph(ultra_graph);
+var GRAPH = new Graph(tree);
 
 matrixToGraph(GRAPH.getMatrix(), graph);
 
